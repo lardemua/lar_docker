@@ -21,13 +21,16 @@ RUN echo 'cd ~/catkin_ws' >> run_me.sh
 RUN echo 'catkin_make' >> run_me.sh
 RUN echo 'source ~/catkin_ws/devel/setup.bash' >> run_me.sh
 RUN echo 'echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc' >> run_me.sh
-RUN echo 'echo "export PYTHONPATH=\$PYTHONPATH:~/catkin_ws/src" >> ~/.bashrc''' >> run_me.sh
+RUN echo 'echo "export PYTHONPATH=~/catkin_ws/src:\$PYTHONPATH" >> ~/.bashrc''' >> run_me.sh
 
 # Avoid roscore using all the RAM with distrobox
 RUN echo 'echo "" >> ~/.bashrc' >> run_me.sh
 RUN echo 'echo "# Avoid roscore using all the RAM" >> ~/.bashrc' >> run_me.sh
 RUN echo 'echo "ulimit -Sn 524288" >> ~/.bashrc' >> run_me.sh
 RUN echo 'echo "ulimit -Hn 524288" >> ~/.bashrc' >> run_me.sh
+
+# Make sure Python accesses user packages
+RUN echo 'echo "export PYTHONPATH=~/.local/lib/python3.8/site-packages:\$PYTHONPATH" >> ~/.bashrc''' >> run_me.sh
 
 # Source .bashrc
 RUN echo 'source ~/.bashrc' >> run_me.sh
