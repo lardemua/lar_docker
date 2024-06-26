@@ -6,20 +6,52 @@ Useful dockerfiles and other docker related material
 
 ### ROS Noetic Distrobox
 
-1. build ROS Noetic Distrobox
+Build image:
 
 ```
-docker build -f ros-noetic-distrobox -t lardemua/ros-noetic-distrobox .
+docker build -f ros-noetic-distrobox -t lardemua/ros-distrobox:noetic .
 ```
 
-2. (optional) build image with nvidia support (cuda 11.8)
+Create a distrobox:
 
 ```
-docker build -f cuda-11-8-ros-noetic-distrobox -t lardemua/cuda-ros-noetic-distrobox:11.8 .
+SHELL=/bin/bash distrobox create --image lardemua/ros-distrobox:noetic --name ros-distrobox --additional-flags "--gpus all" --home $HOME/ros-distrobox
 ```
 
-3. create a distrobox
+Enter the created distrobox:
 
 ```
-distrobox create --image lardemua/cuda-ros-noetic-distrobox:11.8 --name cuda-11-8-ros-noetic-distrobox --additional-flags "--runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_CAPABILITIES=all" --home $HOME/cuda-11-8-ros-noetic-distrobox
+distrobox enter ros-distrobox
+```
+
+Set up ROS for your user:
+
+```
+/user-setup.sh
+```
+
+### ROS Noetic Distrobox with Cuda 11.8
+
+Build image:
+
+```
+docker build -f ros-noetic-cuda-11-8-distrobox -t lardemua/ros-cuda-distrobox:noetic-11.8 .
+```
+
+Create a distrobox:
+
+```
+SHELL=/bin/bash distrobox create --image lardemua/ros-cuda-distrobox:noetic-11.8 --name ros-cuda-distrobox --additional-flags "--gpus all" --home $HOME/ros-cuda-distrobox
+```
+
+Enter the created distrobox:
+
+```
+distrobox enter ros-cuda-distrobox
+```
+
+Set up ROS for your user:
+
+```
+/user-setup.sh
 ```
