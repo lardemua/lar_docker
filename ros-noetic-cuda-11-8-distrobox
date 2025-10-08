@@ -1,6 +1,6 @@
 ######## Ubuntu 20.04 Distrobox Base Image ########
 
-FROM quay.io/toolbx-images/ubuntu-toolbox:20.04
+FROM quay.io/toolbx/ubuntu-toolbox:20.04
 
 ######## Clone NVIDIA Repository ########
 
@@ -8,13 +8,13 @@ RUN git clone https://gitlab.com/nvidia/container-images/cuda.git
 
 ######## NVIDIA Base Dockerfile ########
 
-ENV NVARCH x86_64
+ENV NVARCH=x86_64
 
-ENV NVIDIA_REQUIRE_CUDA "cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471"
-ENV NV_CUDA_CUDART_VERSION 11.8.89-1
-ENV NV_CUDA_COMPAT_PACKAGE cuda-compat-11-8
+ENV NVIDIA_REQUIRE_CUDA="cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471"
+ENV NV_CUDA_CUDART_VERSION=11.8.89-1
+ENV NV_CUDA_COMPAT_PACKAGE=cuda-compat-11-8
 
-LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
+LABEL maintainer="NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg2 curl ca-certificates && \
@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get purge --autoremove -y curl \
     && rm -rf /var/lib/apt/lists/*
 
-ENV CUDA_VERSION 11.8.0
+ENV CUDA_VERSION=11.8.0
 
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -35,34 +35,34 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf \
     && echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
 
 RUN cp cuda/NGC-DL-CONTAINER-LICENSE /
 
 # nvidia-container-runtime
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 ######## NVIDIA Runtime Dockerfile ########
 
-ENV NV_CUDA_LIB_VERSION 11.8.0-1
+ENV NV_CUDA_LIB_VERSION=11.8.0-1
 
-ENV NV_NVTX_VERSION 11.8.86-1
-ENV NV_LIBNPP_VERSION 11.8.0.86-1
-ENV NV_LIBNPP_PACKAGE libnpp-11-8=${NV_LIBNPP_VERSION}
-ENV NV_LIBCUSPARSE_VERSION 11.7.5.86-1
+ENV NV_NVTX_VERSION=11.8.86-1
+ENV NV_LIBNPP_VERSION=11.8.0.86-1
+ENV NV_LIBNPP_PACKAGE=libnpp-11-8=${NV_LIBNPP_VERSION}
+ENV NV_LIBCUSPARSE_VERSION=11.7.5.86-1
 
-ENV NV_LIBCUBLAS_PACKAGE_NAME libcublas-11-8
-ENV NV_LIBCUBLAS_VERSION 11.11.3.6-1
-ENV NV_LIBCUBLAS_PACKAGE ${NV_LIBCUBLAS_PACKAGE_NAME}=${NV_LIBCUBLAS_VERSION}
+ENV NV_LIBCUBLAS_PACKAGE_NAME=libcublas-11-8
+ENV NV_LIBCUBLAS_VERSION=11.11.3.6-1
+ENV NV_LIBCUBLAS_PACKAGE=${NV_LIBCUBLAS_PACKAGE_NAME}=${NV_LIBCUBLAS_VERSION}
 
-ENV NV_LIBNCCL_PACKAGE_NAME libnccl2
-ENV NV_LIBNCCL_PACKAGE_VERSION 2.16.2-1
-ENV NCCL_VERSION 2.16.2-1
-ENV NV_LIBNCCL_PACKAGE ${NV_LIBNCCL_PACKAGE_NAME}=${NV_LIBNCCL_PACKAGE_VERSION}+cuda11.8
+ENV NV_LIBNCCL_PACKAGE_NAME=libnccl2
+ENV NV_LIBNCCL_PACKAGE_VERSION=2.16.2-1
+ENV NCCL_VERSION=2.16.2-1
+ENV NV_LIBNCCL_PACKAGE=${NV_LIBNCCL_PACKAGE_NAME}=${NV_LIBNCCL_PACKAGE_VERSION}+cuda11.8
 
-LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
+LABEL maintainer="NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cuda-libraries-11-8=${NV_CUDA_LIB_VERSION} \
@@ -80,17 +80,17 @@ RUN apt-mark hold ${NV_LIBCUBLAS_PACKAGE_NAME} ${NV_LIBNCCL_PACKAGE_NAME}
 RUN mkdir -p /opt/nvidia/entrypoint.d/
 RUN cp -r cuda/entrypoint.d/ /opt/nvidia/entrypoint.d/
 RUN cp cuda/nvidia_entrypoint.sh /opt/nvidia/
-ENV NVIDIA_PRODUCT_NAME="CUDA"
+ENV NVIDIA_PRODUCT_NAM=="CUDA"
 ENTRYPOINT ["/opt/nvidia/nvidia_entrypoint.sh"]
 
 ######## cudnn8-runtime ########
 
-ENV NV_CUDNN_VERSION 8.9.6.50
-ENV NV_CUDNN_PACKAGE_NAME "libcudnn8"
+ENV NV_CUDNN_VERSION=8.9.6.50
+ENV NV_CUDNN_PACKAGE_NAME="libcudnn8"
 
-ENV NV_CUDNN_PACKAGE "libcudnn8=$NV_CUDNN_VERSION-1+cuda11.8"
+ENV NV_CUDNN_PACKAGE="libcudnn8=$NV_CUDNN_VERSION-1+cuda11.8"
 
-LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
+LABEL maintainer="NVIDIA CORPORATION <cudatools@nvidia.com>"
 LABEL com.nvidia.cudnn.version="${NV_CUDNN_VERSION}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -109,7 +109,7 @@ RUN apt install -y curl
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt update
-RUN apt install -y ros-noetic-desktop-full python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential python3-pip
+RUN apt install -y ros-noetic-desktop-full python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential python3-pip tmux
 RUN rosdep init
 
 # Add user-setup.sh script
